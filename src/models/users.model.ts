@@ -42,10 +42,12 @@ const userSchema = new mongoose.Schema<IUser>(
     isVerified: {
       type: Boolean,
       required: true,
+      default: false
     },
     isAcceptingMessages: {
       type: Boolean,
       required: true,
+      default: true
     },
     messages: [messageSchema],
   },
