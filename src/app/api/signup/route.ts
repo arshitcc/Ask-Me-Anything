@@ -34,6 +34,7 @@ export async function POST(req: Request) {
         isExistingUserByEmail.verifyCode = verifyCode;
         isExistingUserByEmail.verifyCodeExpiry = new Date();
         isExistingUserByEmail.isVerified = false;
+        isExistingUserByEmail.username = username;
         await isExistingUserByEmail.save();
       }
     } else {
