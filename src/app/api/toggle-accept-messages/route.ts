@@ -86,9 +86,7 @@ export async function GET(req: Request) {
       {
         success: true,
         message: "User found",
-        data: {
-          isAcceptingMessages: isExistingUser.isAcceptingMessages,
-        },
+        isAcceptingMessages: isExistingUser.isAcceptingMessages,
       },
       {
         status: 200,

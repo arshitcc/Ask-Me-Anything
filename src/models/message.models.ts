@@ -1,7 +1,11 @@
 import mongoose, { Document } from "mongoose";
 
 export interface IMessage extends Document {
+  _id: mongoose.Types.ObjectId
+  userId : mongoose.Types.ObjectId
   message: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const messageSchema = new mongoose.Schema<IMessage>(
@@ -10,6 +14,10 @@ export const messageSchema = new mongoose.Schema<IMessage>(
       type: String,
       required: true,
       trim: true,
+    },
+    userId : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {
