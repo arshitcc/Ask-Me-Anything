@@ -10,8 +10,7 @@ export const middleware = async (request: NextRequest) => {
     token &&
     (url.pathname.startsWith("/login") ||
       url.pathname.startsWith("/signup") ||
-      url.pathname.startsWith("/verify") ||
-      url.pathname.startsWith("/"))
+      url.pathname.startsWith("/verify"))
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }

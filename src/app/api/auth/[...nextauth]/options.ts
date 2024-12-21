@@ -24,9 +24,8 @@ export const AuthOptions: NextAuthOptions ={
             async authorize(credentials : any) : Promise<any>{
                 await connectDB();
                 try {
-                    console.log(credentials);
                     const user = await User.findOne({
-                        $or : [{username : credentials.identifier.user}, {email : credentials.identifier.user}]
+                        $or : [{username : credentials.user}, {email : credentials.user}]
                     });
                     if(!user){
                         throw new Error("User doesn't exist");
