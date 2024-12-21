@@ -70,8 +70,8 @@ export async function GET(req: Request) {
         }
       );
     }
-    const user = session?.user;
-    const isExistingUser = await User.findOne(user._id);
+    const user = session?.user;    
+    const isExistingUser = await User.findOne({_id : user._id});
     if (!isExistingUser) {
       return Response.json(
         {
@@ -81,7 +81,6 @@ export async function GET(req: Request) {
         { status: 404 }
       );
     }
-
     return Response.json(
       {
         success: true,
