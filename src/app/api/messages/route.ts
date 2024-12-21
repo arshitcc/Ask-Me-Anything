@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models/users.model";
-import { IMessage } from "@/models/message.models";
+import { Message } from "@/models/message.models";
 import { getServerSession } from "next-auth";
 import { AuthOptions } from "../auth/[...nextauth]/options";
 
@@ -21,33 +21,23 @@ export async function GET(req: Request) {
       );
     }
     const userId = session?.user._id;
-    const messages = await User.aggregate([
+    const messages = await Message.aggregate([
       {
-        $match: {
-          _id: new mongoose.Types.ObjectId(userId),
-        },
+        $match : {
+          userId : new mongoose.Types.ObjectId(userId)
+        }
       },
       {
-        $unwind: "$messages",
-      },
-      {
-        $sort: {
-          "messages.createdAt": -1,
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          messages: {
-            $push: "$messages",
-          },
-        },
-      },
-    ]).exec();
+        $sort : {
+          createdAt : -1
+        }
+      }
+    ]);
+
     return Response.json(
       {
         success: true,
-        messages: messages[0].messages,
+        messages: messages,
       },
       {
         status: 200,
@@ -92,9 +82,20 @@ export async function POST(req: Request) {
         { status: 403 }
       );
     }
-    const newMessage = { message };
-    user.messages.push(newMessage as IMessage);
-    await user.save();
+    const newMessage = await Message.create({
+      userId : user._id,
+      message
+    });
+
+    if(!newMessage) {
+      return Response.json(
+        {
+          success: false,
+          message: "Something went wrong",
+        },
+        { status: 500 }
+      );
+    }
 
     return Response.json(
       {
@@ -107,6 +108,66 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Error sending message:", error);
+    return Response.json(
+      {
+        success: false,
+        message: "Something went wrong",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+export async function DELETE(req: Request) {
+  await connectDB();
+  try {
+    const {messageId} = await req.json();
+    const session = await getServerSession(AuthOptions);
+    if (!session?.user) {
+      return Response.json(
+        {
+          success: false,
+          message: "Unauthorized request",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+    const userId = session?.user._id;
+    const user = await User.findOne({ _id: userId }).exec();
+    if (!user) {
+      return Response.json(
+        {
+          success: false,
+          message: "User not found",
+        },
+        { status: 404 }
+      );
+    }
+    const response = await Message.findByIdAndDelete(messageId);
+    if(!response) {
+      return Response.json(
+        {
+          success: false,
+          message: "Something went wrong",
+        },
+        { status: 500 }
+      );
+    }
+    return Response.json(
+      {
+        success: true,
+        message: "Message deleted successfully",
+      },
+      {
+        status: 200,
+      }
+    )
+  } catch (error) {
+    console.error("Error deleting message:", error);
     return Response.json(
       {
         success: false,

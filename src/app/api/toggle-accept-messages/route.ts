@@ -9,7 +9,7 @@ export async function PATCH(req: Request) {
   await connectDB();
   try {
     const session = await getServerSession(AuthOptions);
-    if (!session?.user) {
+    if (!session || !session?.user) {
       return Response.json(
         {
           success: false,
@@ -21,9 +21,11 @@ export async function PATCH(req: Request) {
       );
     }
     const user = session?.user as NextUser;
+    const { isAcceptingMessages } = await req.json();
+    
     const updatedUser = await User.findOneAndUpdate(
       { _id: user._id },
-      { $set: { isAcceptingMessages: !user.isAcceptingMessages } },
+      { $set: { isAcceptingMessages } },
       { new: true }
     );
     if (!updatedUser) {
@@ -40,7 +42,7 @@ export async function PATCH(req: Request) {
       {
         success: true,
         message: "User's Accepting Messages toggled successfully",
-        data: updatedUser,
+        isAcceptingMessages: updatedUser.isAcceptingMessages,
       },
       {
         status: 200,
