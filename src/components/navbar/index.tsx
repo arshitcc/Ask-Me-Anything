@@ -24,7 +24,7 @@ const Navbar = () => {
                 Dashboard
               </Button>
             </Link>
-            <Button onClick={() => signOut()} className="w-full text-black md:w-auto" variant="destructive">
+            <Button onClick={() => signOut()} className="w-full text-white md:w-auto" variant="destructive">
               Log Out
             </Button>
             

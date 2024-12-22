@@ -35,34 +35,6 @@ const page = () => {
     },
   });
 
-  //   const handleLogin = async (data: z.infer<typeof loginSchema>) => {
-  //     setIsSubmitting(true);
-  //     try {
-  //         const response = await axios.post<ApiResponse>("/api/login", data);
-  //         if(response.data.success) {
-  //             toast({
-  //                 title: response.data.message,
-  //                 variant: "default",
-  //             });
-  //             router.replace("/");
-  //         }
-  //         else{
-  //             toast({
-  //                 title: response.data.message,
-  //                 variant: "destructive",
-  //             });
-  //         }
-  //     } catch (error) {
-  //         const axiosError = error as AxiosError<ApiResponse>;
-  //         toast({
-  //             title: axiosError.response?.data.message ?? "Error logging in",
-  //             variant: "destructive",
-  //         });
-  //     } finally {
-  //         setIsSubmitting(false);
-  //     }
-  //   };
-
   const handleLogin = async (data: z.infer<typeof loginSchema>) => {
     setIsSubmitting(true);
     try {
@@ -72,8 +44,6 @@ const page = () => {
         password: data.password,
       });
 
-      console.log("response : ",response)
-      
       if (response?.error) {
         if (response.error === "CredentialsSignin") {
           toast({
@@ -88,7 +58,7 @@ const page = () => {
             variant: "destructive",
           });
         }
-      }else {
+      } else {
         toast({
           title: "Login successful",
           variant: "default",
@@ -143,10 +113,16 @@ const page = () => {
               )}
             </Button>
           </form>
-          <div className="flex justify-center mt-4">
-            <Link href="/signup" className="text-sm text-muted-foreground">
-              Don&apos;t have an account? Sign up
-            </Link>
+          <div className="text-center mt-4">
+            <p>
+              Not a member?{" "}
+              <Link
+                href="/signup"
+                className="text-blue-600 hover:text-blue-800"
+              >
+                Sign up
+              </Link>
+            </p>
           </div>
         </Form>
       </div>

@@ -55,7 +55,6 @@ const page = () => {
           });
         }
       } catch (error) {
-        console.error("Error in Verifying User", error);
         const axiosError = error as AxiosError<ApiResponse>;
         toast({
           title: "Verification Failed",

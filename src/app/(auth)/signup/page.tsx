@@ -23,7 +23,6 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { Loader2 } from "lucide-react";
 
 const page = () => {
-    
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
   const [checkingUsername, setCheckingUsername] = useState(false);
@@ -62,31 +61,28 @@ const page = () => {
         } finally {
           setCheckingUsername(false);
         }
-      }
-      else{
-        setUsernameMessage('');
+      } else {
+        setUsernameMessage("");
       }
     };
     checkUsername();
   }, [username]);
 
-  const handleSignup = async (data : z.infer<typeof signupSchema>) => {
-    
-    if(data.password !== data.confirmPassword) {
-        setError("Passwords do not match");
-        return;
+  const handleSignup = async (data: z.infer<typeof signupSchema>) => {
+    if (data.password !== data.confirmPassword) {
+      setError("Passwords do not match");
+      return;
     }
     setIsSubmitting(true);
     try {
       const response = await axios.post<ApiResponse>("/api/signup", data);
-      console.log(response);
-      if(response.data.success) {
+      if (response.data.success) {
         toast({
           title: response.data.message,
           variant: "default",
         });
-        setError('');
-        router.replace(`/verify/${username}`)
+        setError("");
+        router.replace(`/verify/${username}`);
       }
       setIsSubmitting(false);
     } catch (error) {
@@ -103,12 +99,16 @@ const page = () => {
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join <br />Ask-Me-Anything
+            Join <br />
+            Ask-Me-Anything
           </h1>
           <p className="mb-4">Sign up to start your anonymous adventure</p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSignup)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(handleSignup)}
+            className="space-y-6"
+          >
             <FormField
               name="username"
               control={form.control}
@@ -191,7 +191,7 @@ const page = () => {
         <div className="text-center mt-4">
           <p>
             Already a member?{" "}
-            <Link href="/sign-in" className="text-blue-600 hover:text-blue-800">
+            <Link href="/login" className="text-blue-600 hover:text-blue-800">
               Sign in
             </Link>
           </p>
