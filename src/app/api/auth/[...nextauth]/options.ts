@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models/users.model";
 import bcrypt from "bcrypt";
+import { User as NextUser } from "next-auth";
 
 export const AuthOptions: NextAuthOptions ={
     providers: [
@@ -21,27 +22,27 @@ export const AuthOptions: NextAuthOptions ={
                     placeholder : "Enter password"
                 }
             },
-            async authorize(credentials : any) : Promise<any>{
+            async authorize(credentials: Record<"user" | "password", string> | undefined): Promise<NextUser | null>{
                 await connectDB();
                 try {
                     const user = await User.findOne({
-                        $or : [{username : credentials.user}, {email : credentials.user}]
-                    });
+                        $or : [{username : credentials?.user || ""}, {email : credentials?.user || ""}]
+                    }).lean();
                     if(!user){
                         throw new Error("User doesn't exist");
                     }
                     if (!user.isVerified) {
                         throw new Error('Please verify your account before logging in');
                     }
-                    const isPasswordCorrect = await bcrypt.compare(credentials.password,user.password);
+                    const isPasswordCorrect = await bcrypt.compare(credentials?.password || "",user.password);
                     if(isPasswordCorrect){
-                        return user;
+                        return user as unknown as NextUser;
                     }
                     else{
                         throw new Error("Incorrect password");
                     }
-                } catch (error : any) {
-                    throw new Error(error.message);
+                } catch (error : unknown) {
+                    throw new Error((error as { message: string })?.message || "");
                 }
             }
         })

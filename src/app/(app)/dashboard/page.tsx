@@ -26,9 +26,16 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const username = user?.username;
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
-  const profileUrl = `${baseUrl}/u/${username}`;
   const router = useRouter();
+
+  const [profileUrl, setProfileUrl] = useState<string>('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
+      setProfileUrl(`${baseUrl}/u/${username}`);
+    }
+  }, [username]);
 
   const handleCopyLink = useCallback(() => {
     setCopiedProfile(true);

@@ -22,7 +22,7 @@ import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { Loader2 } from "lucide-react";
 
-const page = () => {
+const Page = () => {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
   const [checkingUsername, setCheckingUsername] = useState(false);
@@ -201,4 +201,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

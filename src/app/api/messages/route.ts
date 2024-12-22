@@ -5,7 +5,7 @@ import { Message } from "@/models/message.models";
 import { getServerSession } from "next-auth";
 import { AuthOptions } from "../auth/[...nextauth]/options";
 
-export async function GET(req: Request) {
+export async function GET() {
   await connectDB();
   try {
     const session = await getServerSession(AuthOptions);

@@ -1,7 +1,8 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { IMessage, messageSchema } from "./message.models";
 
 export interface IUser extends Document {
+  _id : mongoose.Types.ObjectId;
   username: string;
   email: string;
   password: string;

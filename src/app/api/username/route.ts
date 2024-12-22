@@ -49,11 +49,11 @@ export async function GET(req: Request) {
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error : unknown) {
     return Response.json(
       {
         success: false,
-        message: "Error checking username",
+        message: (error as { message: string })?.message || "Error checking username",
       },
       { status: 500 }
     );

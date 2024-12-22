@@ -22,7 +22,7 @@ import {
 
 import React from "react";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -130,4 +130,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

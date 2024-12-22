@@ -1,6 +1,5 @@
 import { connectDB } from "@/lib/db";
 import { User } from "@/models/users.model";
-import { ApiResponse } from "@/types/ApiResponse";
 import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 import bcrypt from "bcrypt";
 

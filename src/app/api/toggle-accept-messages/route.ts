@@ -48,16 +48,16 @@ export async function PATCH(req: Request) {
         status: 200,
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error toggling accept messages : ", error);
     return Response.json(
-      { success: false, message: error.message },
+      { success: false, message: (error as { message: string })?.message || "" },
       { status: 500 }
     );
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   await connectDB();
   try {
     const session = await getServerSession(AuthOptions);
@@ -93,7 +93,7 @@ export async function GET(req: Request) {
         status: 200,
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error retrieving message acceptance status:", error);
     return Response.json(
       { success: false, message: "Error retrieving message acceptance status" },
