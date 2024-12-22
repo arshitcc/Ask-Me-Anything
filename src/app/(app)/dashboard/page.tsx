@@ -15,6 +15,7 @@ import { Message } from '@/components/message'
 import { User } from 'next-auth'
 import { ApiResponse } from '@/types/ApiResponse'
 import axios, { AxiosError } from 'axios'
+import { useRouter } from 'next/navigation'
 
 const Dashboard = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -27,8 +28,9 @@ const Dashboard = () => {
   const username = user?.username;
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/u/${username}`;
+  const router = useRouter();
 
-  const handleCopyLink = () => {
+  const handleCopyLink = useCallback(() => {
     setCopiedProfile(true);
     navigator.clipboard.writeText(profileUrl);
     toast({
@@ -39,7 +41,13 @@ const Dashboard = () => {
     setTimeout(() => {
       setCopiedProfile(false);
     }, 2000);
-  }
+  }, [profileUrl, setCopiedProfile, toast]);
+  
+  useEffect(() => {
+    if (copiedProfile && user.username!== username) {
+      router.replace(`/u/${username}`);
+    }
+  }, [copiedProfile, router, username]);
 
   const getMessages = useCallback(async () => {
     setIsLoading(true);
